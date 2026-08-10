@@ -1,37 +1,92 @@
-<div class="container">
-  <h1>My Todo List</h1>
-  <p class="subtitle">Manage your daily tasks</p>
+<div class="dashboard">
 
-  <div class="input-section">
-    <input 
-      type="text" 
-      [(ngModel)]="newTodoText" 
-      placeholder="Enter a new todo list.."
-      (keyup.enter)="addTodo()"
-    >
-    <button (click)="addTodo()">Add Todo</button>
-  </div>
+  <header>
+    <h1>🎓 Student Task Dashboard</h1>
+    <p>Manage your learning tasks with Angular</p>
+  </header>
 
-  <div class="card">
-    <div class="card-header">
-      <span>My Tasks</span>
-      <span class="badge">{{ todos.length }} Tasks</span>
+  <!-- Statistics -->
+  <div class="stats">
+
+    <div class="stat-card">
+      <span>Total Tasks</span>
+      <strong>{{ totalTasks }}</strong>
     </div>
 
-    <div class="card-body">
-      <!-- Jab koi todo na ho -->
-      <div *ngIf="todos.length === 0" class="empty-state">
-        <p><strong>No todos yet</strong></p>
-        <p class="sub-empty">Add a task above to get started.</p>
+    <div class="stat-card">
+      <span>Completed</span>
+      <strong class="green">{{ completedTasks }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>Pending</span>
+      <strong class="yellow">{{ pendingTasks }}</strong>
+    </div>
+
+  </div>
+
+  <!-- Add Task -->
+  <section class="add-section">
+    <h3>Add New Task</h3>
+
+    <div class="input-row">
+      <input
+        type="text"
+        [(ngModel)]="newTask"
+        placeholder="Enter a task..."
+        (keyup.enter)="addTask()"
+      />
+
+      <button (click)="addTask()">Add Task</button>
+    </div>
+  </section>
+
+  <!-- Tasks -->
+  <section class="tasks-section">
+    <h3>My Tasks</h3>
+
+    <div *ngIf="tasks.length === 0" class="empty">
+      No tasks added yet.
+    </div>
+
+    <div
+      class="task"
+      *ngFor="let task of tasks; let i = index"
+      [class.completed]="task.completed"
+    >
+
+      <div class="task-left">
+        <input
+          type="checkbox"
+          [checked]="task.completed"
+          (change)="toggleTask(i)"
+        />
+
+        <span>{{ task.title }}</span>
       </div>
 
-      <!-- Jab todo add ho -->
-      <ul *ngIf="todos.length > 0" class="todo-list">
-        <li *ngFor="let todo of todos; let i = index">
-          <span>{{ todo }}</span>
-          <button class="delete-btn" (click)="deleteTodo(i)">✕</button>
-        </li>
-      </ul>
+      <button class="delete-btn" (click)="deleteTask(i)">
+        Delete
+      </button>
+
     </div>
-  </div>
+  </section>
+
+  <!-- Progress -->
+  <section class="progress-section">
+
+    <div class="progress-heading">
+      <span>Learning Progress</span>
+      <span>{{ progress }}%</span>
+    </div>
+
+    <div class="progress-bar">
+      <div
+        class="progress-fill"
+        [style.width.%]="progress">
+      </div>
+    </div>
+
+  </section>
+
 </div>

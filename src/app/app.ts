@@ -2,25 +2,77 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+interface Task {
+  title: string;
+  completed: boolean;
+}
+
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule
+  ],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrls: ['./app.css']
 })
 export class App {
-  newTodoText: string = '';
-  todos: string[] = [];
 
-  addTodo() {
-    if (this.newTodoText.trim()) {
-      this.todos.push(this.newTodoText.trim());
-      this.newTodoText = '';
+  newTask: string = '';
+
+  tasks: Task[] = [];
+
+  get totalTasks(): number {
+    return this.tasks.length;
+  }
+
+  get completedTasks(): number {
+    return this.tasks.filter(task => task.completed).length;
+  }
+
+  get pendingTasks(): number {
+    return this.tasks.filter(task => !task.completed).length;
+  }
+
+  get progress(): number {
+
+    if (this.totalTasks === 0) {
+      return 0;
     }
+
+    return Math.round(
+      (this.completedTasks / this.totalTasks) * 100
+    );
   }
 
-  deleteTodo(index: number) {
-    this.todos.splice(index, 1);
+  addTask(): void {
+
+    const title = this.newTask.trim();
+
+    if (title === '') {
+      return;
+    }
+
+    this.tasks.push({
+      title: title,
+      completed: false
+    });
+
+    this.newTask = '';
   }
+
+  toggleTask(index: number): void {
+
+    this.tasks[index].completed =
+      !this.tasks[index].completed;
+
+  }
+
+  deleteTask(index: number): void {
+
+    this.tasks.splice(index, 1);
+
+  }
+
 }
